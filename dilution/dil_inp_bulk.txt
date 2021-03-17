@@ -1,0 +1,12 @@
+Dil_Low 0.0
+Dil_High 1.0
+Samples_Dil 1000
+Ref_tstop 1000
+Num_ODE_Eqs 13
+Num_of_Peaks 6
+Vel_Threshold 0.0001 
+Ref_Cyc_B 0.1
+Init_Step_Size 0.0001
+Max_Step_Size 100
+Min_Step_Size 0.00001
+Reverse_Dil_Order 1
