@@ -246,7 +246,7 @@ def calcPeriod(time, conc, num_peak_thresh):
     if len(max_idx_pks) < num_peak_thresh: 
       # No oscillations
       per = np.NaN
-      return per
+      return [per, max_idx_pks]
     else: 
       # Possible oscillations 
       time_list = time[max_idx_pks]
