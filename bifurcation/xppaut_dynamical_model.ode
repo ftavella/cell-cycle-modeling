@@ -1,0 +1,34 @@
+APC = DIL*APCT-APCP1-APCP2-APCP3-APCP4
+H1 = MPF + alpha * (CycBT- MPF)
+vdpAPC = kdpAPC_B55 * B55 + kdpAPC_bk
+vdpMPF = kdpMPF_25P*Cdc25P + kdpMPF_25 * (DIL*Cdc25T - Cdc25P)
+vpMPF = kpMPF_Wee * Wee1+kpMPF_WeeP * (DIL*Wee1T - Wee1)
+
+APCP1'= TSCALE*( kpAPC*H1*APC-(vdpAPC+ kpAPC*H1)*APCP1 +vdpAPC*APCP2 )
+APCP2'= TSCALE*( kpAPC*H1*APCP1-(vdpAPC+ kpAPC*H1)*APCP2 +vdpAPC*APCP3 )
+APCP3'= TSCALE*( kpAPC*H1*APCP2-(vdpAPC+ kpAPC*H1)*APCP3 +vdpAPC*APCP4 )
+APCP4'= TSCALE*( kpAPC*H1*APCP3-vdpAPC*APCP4 )
+APCP_C20'= TSCALE*( kasAC*(APCP4 - APCP_C20)*(C20 - APCP_C20)-(kdsAC+vdpAPC+ kp20*H1)*APCP_C20 )
+Cdc25P'= TSCALE*( ka25_H1*H1*(DIL*Cdc25T -Cdc25P)/(J + DIL*Cdc25T -Cdc25P)-(ki25+ki25_B55*B55)*Cdc25P/(J +Cdc25P) )
+CycBT'= TSCALE*( (DIL^POW_S)*ksCyc - (DIL^POW_D)*(kdCyc + kdCyc_APC*(APCP_C20/(J +CycBT)))*CycBT )
+C20'= TSCALE*( kdp20 * (DIL*C20T-C20)- kp20 * H1 * C20 )
+ENSAPT' =  TSCALE*( kpENSA * GWP * (DIL*ENSAT - ENSAPT) - kdpENSA * ENSAPT )
+GWP'= TSCALE*( kpGW * H1 *(DIL*GWT - GWP)/(JpGW + DIL*GWT - GWP)-(kdpGW +kdpGW_B55*B55)*GWP/(JdpGW + GWP) )
+MPF'= TSCALE*( (DIL^POW_S)*ksCyc - (DIL^POW_D)*(kdCyc+ kdCyc_APC*(APCP_C20/(J+CycBT)))*MPF - vpMPF * MPF + vdpMPF*(CycBT - MPF) )
+B55'=  TSCALE*( - kasEP * (ENSAPT -(DIL*B55T - B55))*B55 +(kdsEP +kdpENSA)*(DIL*B55T -B55) )
+Wee1'=  TSCALE*( (kaWee +kaWee_B55*B55)*(DIL*Wee1T - Wee1)/(J + DIL*Wee1T - Wee1)- kiWee_H1 * H1 * Wee1/(J+ Wee1) )
+
+p alpha=0.3, APCT =1.5, Cdc25T = 1, C20T = 2, ENSAT=2.2
+p GWT=1, J=0.01, JdpGW =0.1, JpGW = 0.1
+p B55T=0.7, Wee1T=1
+p kasAC= 500, kasEP= 500, kaWee= 0.2, kaWee_B55 =0.3, ka25_H1=1
+p kdCyc = 0.02, kdCyc_APC= 2, kdpAPC_bk =0.1, kdpAPC_B55 =1.5, kdpENSA =2
+p kdpGW =0.1, kdpGW_B55 =1, kdpMPF_25= 0.2, kdpMPF_25P= 2, kdp20 =2
+p kdsAC=1, kdsEP= 1, kiWee_H1= 1, ki25= 0.2, ki25_B55 =0.3
+p kpAPC= 0.5, kpENSA =4, kpGW = 1, kpMPF_Wee=4, kpMPF_WeeP= 0.02
+p kp20=4, ksCyc=0.1, DIL = 1.0, POW_S = 2, POW_D = 1, TSCALE = 2
+
+init CycBT=0.0001, C20=0.001, B55= 0.007, Wee1= 0.001
+
+done
+
