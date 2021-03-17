@@ -8,7 +8,19 @@ in_fpath = './dilution/dil_inp_bulk.txt'
 
 out_path = './dilution/results_bulk/'
 out_name = 'bulk_data'
-
+if len(sys.argv) < 5:
+    print('Please call the script with the following inputs:')
+    print(' - Path to file for reference ODE parameters')
+    print(' - Path to file for simulation parameters')
+    print(' - Path to folder for saving simulation results (include a final /)')
+    print(' - Desired filename for the output')
+    raise ValueError()
+else:
+    ref_p_path = sys.argv[1]
+    in_fpath = sys.argv[2]
+    out_path = sys.argv[3]
+    out_name = sys.argv[4]
+#
 # ODE parameters
 p_bulk = mu.readParams(ref_p_path)
 # Simulation parameters
