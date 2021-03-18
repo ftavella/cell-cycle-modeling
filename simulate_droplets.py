@@ -5,7 +5,6 @@ from scipy.integrate import solve_ivp
 
 ref_p_path = './reference_parameters.txt'
 in_fpath = './dilution/dil_inp_droplets.txt'
-
 out_path = './dilution/results_droplets/'
 out_prefix = 'droplet_data_'
 """
@@ -62,7 +61,7 @@ for idx, d in enumerate(dil_list):
         else:
             continue   
     # Oscillation Percentage Estimation
-    per_list = [d['Per'] for d in feature_list]
+    per_list = [d['Per'] for d in feature_list if d != None]
     osc_perc = 100*np.count_nonzero(~np.isnan(per_list))/sp['Droplets_Per_Dil']
     # Screen Output
     if osc_perc > 0:
@@ -75,4 +74,3 @@ for idx, d in enumerate(dil_list):
             feature_list=feature_list, osc_perc = osc_perc, dil=d)
 # Save simulation data
 np.savez(out_path + 'Simulation_Log', p_ref=p_ref, sim_params=sp, dil_list=dil_list)
-
