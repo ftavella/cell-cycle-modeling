@@ -1,0 +1,12 @@
+Dilution 0.0
+Ref_tstop 1000
+Droplets_Per_Dil 500
+Num_ODE_Eqs 13
+Gamma_Scale 0.001
+Num_of_Peaks 6
+Vel_Threshold 0.0001 
+Ref_Cyc_B 0.1
+Init_Step_Size 0.0001
+Max_Step_Size 100
+Min_Step_Size 0.00001
+Reverse_Dil_Order 1
