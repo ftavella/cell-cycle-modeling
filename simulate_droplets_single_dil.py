@@ -37,7 +37,7 @@ for jdx, smp in enumerate(range(int(sp['Droplets_Per_Dil']))):
             feature_list[jdx] = features
         else:
             # Could be a non-converged oscillator
-            sol_2 = solve_ivp(mu.cycle_model, [sol.t[-1], 4*sol.t[-1]], sol.y[:,-1], first_step = sp['Init_Step_Size'], 
+            sol_2 = solve_ivp(mu.cycle_model, [sol.t[-1], 5*sol.t[-1]], sol.y[:,-1], first_step = sp['Init_Step_Size'], 
                             max_step = sp['Max_Step_Size'], min_step = sp['Min_Step_Size'], args=([p_droplet]),
                             method = 'LSODA', vectorized = True)
             if not mu.is_steady_state(sol_2, p_droplet, sp['Vel_Threshold']):
