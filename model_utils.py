@@ -3,6 +3,26 @@ import numpy as np
 import pandas as pd
 from scipy.signal import find_peaks
 
+def sigmoid(x, a, b):
+    """
+    Sigmoid function for fitting
+
+    Parameters
+    ----------
+    x : float or numpy.array
+        variable of the function
+    a : float
+        slope parameter
+    b : float
+        midpoint parameter
+
+    Returns
+    -------
+    float or numpy.array
+        Sigmoid of X
+    """
+    ret = 1/(1 + np.exp(-a*(x-b)))
+    return ret
 
 def cycle_model(t, y, p):
     """
