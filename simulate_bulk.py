@@ -25,7 +25,7 @@ else:
 p_bulk = mu.readParams(ref_p_path)
 # Simulation parameters
 sp = mu.readParams(in_fpath)
-aux_dil_list = np.linspace(int(sp['Dil_Low']), int(sp['Dil_High']), int(sp['Samples_Dil']))
+aux_dil_list = np.linspace(float(sp['Dil_Low']), float(sp['Dil_High']), int(sp['Samples_Dil']))
 if bool(sp['Reverse_Dil_Order']):
     dil_list = np.flip(aux_dil_list)
 else:
