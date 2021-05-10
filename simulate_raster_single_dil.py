@@ -21,7 +21,6 @@ results_droplets = np.load(res_path, allow_pickle=True)
 for idx, result in enumerate(results_droplets['feature_list']): 
     # Check if that droplet oscillated
     if result is not None:
-        print(idx)
         p_droplet = results_droplets['param_list'][idx]
         p_droplet['dil'] = dil 
         # Set Initial condition
@@ -37,7 +36,6 @@ for idx, result in enumerate(results_droplets['feature_list']):
         time_list = sol.t[max_idx_pks]
         # Save peaktimes
         peak_times.append(time_list)
-        break
 # Save data for that dilution
 np.savez(out_path + out_prefix + str(dil).replace('.','-'), peak_times=peak_times,
          dil=dil)
