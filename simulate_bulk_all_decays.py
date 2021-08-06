@@ -38,7 +38,7 @@ for idx, d in enumerate(dil_list):
     y0 = mu.limit_cycle_init_cond_bulk(int(sp['Num_ODE_Eqs']), p_bulk, sp['Ref_Cyc_B'])
     p_bulk['Init_Cond'] = y0
     # Solve
-    sol = solve_ivp(mu.cycle_model, [0, t_stop], y0, first_step = sp['Init_Step_Size'], 
+    sol = solve_ivp(mu.cycle_model_all_decays, [0, t_stop], y0, first_step = sp['Init_Step_Size'], 
                     max_step = sp['Max_Step_Size'], min_step = sp['Min_Step_Size'], args=([p_bulk]),
                     method = 'LSODA', vectorized = True)
     # Final velocity
@@ -49,7 +49,7 @@ for idx, d in enumerate(dil_list):
             feature_list[idx] = features
         else:
             # Could be a non-converged oscillator
-            sol_2 = solve_ivp(mu.cycle_model, [sol.t[-1], 5*sol.t[-1]], sol.y[:,-1], first_step = sp['Init_Step_Size'], 
+            sol_2 = solve_ivp(mu.cycle_model_all_decays, [sol.t[-1], 5*sol.t[-1]], sol.y[:,-1], first_step = sp['Init_Step_Size'], 
                             max_step = sp['Max_Step_Size'], min_step = sp['Min_Step_Size'], args=([p_bulk]),
                             method = 'LSODA', vectorized = True)
             if not mu.is_steady_state(sol_2, p_bulk, sp['Vel_Threshold']):
