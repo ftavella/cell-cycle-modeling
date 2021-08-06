@@ -99,6 +99,82 @@ def cycle_model(t, y, p):
                                  dENSAPTdt, dGWPdt, dMPFdt, dB55dt, dWee1dt])
     return dydt
 
+def cycle_model_all_decays(t, y, p):
+    """
+    ODE model for cell cycle dynamics based on [1] and 
+    modified to include a parameter called dil which models
+    the effect of changing the cytoplasmic density. This model
+    differs from cycle_model() in that it includes a decay for
+    binding, unbinding, phosphorylation, and dephosphorylation. 
+
+    Parameters
+    ----------
+    t : float or numpy.array
+        Value or array representing time
+    y : numpy.array
+        Value or array representing concentrations. The model 
+        assumes a particular order of variables in y. See first
+        line of code for the unpacking of y
+    p : dict
+        Dictionary containing parameter names as keys and their
+        values. See reference_parameters.txt for an example of 
+        parameter names and typical values
+    
+    Returns
+    -------
+    numpy.array
+        Time derivative of the cell cycle model
+    
+    [1] Zhang, T., Tyson, J. J., & Novák, B. (2013). 
+    Role for regulated phosphatase activity in 
+    generating mitotic oscillations in Xenopus 
+    cell-free extracts. Proceedings of the National 
+    Academy of Sciences, 110(51), 20539-20544.
+    """
+    APCP1, APCP2, APCP3, APCP4, APCP_C20, Cdc25P, CycBT, C20, ENSAPT, GWP, MPF, B55, Wee1 = y
+    # Auxiliary calculations
+    APC = p['dil']*p['APCT'] - APCP1- APCP2 - APCP3 - APCP4
+    H1 = MPF + p['alpha']*(CycBT- MPF)
+    vdpAPC = (p['kdpAPC_B55']*(p['dil']**p['kdppow']))*B55 + (p['kdpAPC_bk']*(p['dil']**p['kdppow']))
+    vdpMPF = (p['kdpMPF_25P']*(p['dil']**p['kdppow']))*Cdc25P + (p['kdpMPF_25']*(p['dil']**p['kdppow'])) * (p['dil']*p['Cdc25T'] - Cdc25P)
+    vpMPF = (p['kpMPF_Wee']*(p['dil']**p['kppow']))*Wee1 + (p['kpMPF_WeeP']*(p['dil']**p['kppow'])) * (p['dil']*p['Wee1T'] - Wee1)
+    # APC/C Equiations (1-4)
+    dAPCP1dt = (p['kpAPC']*(p['dil']**p['kppow']))*H1*APC-(vdpAPC+ (p['kpAPC']*(p['dil']**p['kppow']))*H1)*APCP1 +vdpAPC*APCP2
+    dAPCP2dt = (p['kpAPC']*(p['dil']**p['kppow']))*H1*APCP1-(vdpAPC+ (p['kpAPC']*(p['dil']**p['kppow']))*H1)*APCP2 +vdpAPC*APCP3
+    dAPCP3dt = (p['kpAPC']*(p['dil']**p['kppow']))*H1*APCP2-(vdpAPC+ (p['kpAPC']*(p['dil']**p['kppow']))*H1)*APCP3 +vdpAPC*APCP4
+    dAPCP4dt = (p['kpAPC']*(p['dil']**p['kppow']))*H1*APCP3-vdpAPC*APCP4
+    # 5
+    dAPCP_C20dt = (p['kasAC']*(p['dil']**p['kaspow']))*(APCP4 - APCP_C20)*(C20 - APCP_C20) \
+                  - (p['kdsAC']*(p['dil']**p['kdspow'])+vdpAPC+ (p['kp20']*(p['dil']**p['kppow']))*H1)*APCP_C20
+    # 6
+    dCdc25Pdt = p['ka25_H1']*(p['dil']**p['kppow'])*H1*(p['dil']*p['Cdc25T'] -Cdc25P)/(p['J'] + p['dil']*p['Cdc25T'] -Cdc25P) \
+                - (p['dil']**p['kdppow'])*(p['ki25'] + p['ki25_B55']*B55)*Cdc25P/(p['J'] +Cdc25P)
+    # 7
+    dCycBTdt = (p['dil']**p['kspow'])*p['ksCyc'] \
+               - (p['dil']**p['kdpow'])*(p['kdCyc']+p['kdCyc_APC']*(APCP_C20/(p['J']+CycBT)))*CycBT
+    # 8
+    dC20dt = (p['kdp20']*(p['dil']**p['kdppow'])) * (p['dil']*p['C20T']-C20)- (p['kp20']*(p['dil']**p['kppow'])) * H1 * C20
+    # 9
+    dENSAPTdt = (p['kpENSA']*(p['dil']**p['kppow'])) * GWP * (p['dil']*p['ENSAT'] - ENSAPT) - (p['kdpENSA']*(p['dil']**p['kdppow'])) * ENSAPT
+    # 10
+    dGWPdt = (p['kpGW']*(p['dil']**p['kppow'])) * H1 *(p['dil']*p['GWT'] - GWP)/(p['JpGW'] + p['dil']*p['GWT'] - GWP) \
+            - ((p['kdpGW']*(p['dil']**p['kdppow']))+(p['kdpGW_B55']*(p['dil']**p['kdppow']))*B55)*GWP/(p['JdpGW'] + GWP)
+    # 11
+    dMPFdt = (p['dil']**p['kspow'])*p['ksCyc'] \
+             - (p['dil']**p['kdpow'])*(p['kdCyc']+ p['kdCyc_APC']*(APCP_C20/(p['J']+CycBT)))*MPF \
+             - vpMPF * MPF + vdpMPF*(CycBT - MPF)
+    # 12
+    dB55dt = - (p['kasEP']*(p['dil']**p['kaspow'])) * (ENSAPT - (p['dil']*p['B55T'] - B55))*B55 \
+            + (p['kdsEP']*(p['dil']**p['kdspow'])+(p['kdpENSA']*(p['dil']**p['kdppow'])))*(p['dil']*p['B55T'] - B55)
+    # 13
+    dWee1dt = (p['dil']**p['kdppow'])*(p['kaWee'] + p['kaWee_B55']*B55)*(p['dil']*p['Wee1T'] \
+              - Wee1)/(p['J'] + p['dil']*p['Wee1T'] - Wee1) \
+              - (p['dil']**p['kppow'])*p['kiWee_H1'] * H1 * Wee1/(p['J']+ Wee1)
+    # Multiply by the appropriate time scaling  
+    dydt = p['tscale']*np.array([dAPCP1dt, dAPCP2dt, dAPCP3dt, dAPCP4dt, 
+                                 dAPCP_C20dt, dCdc25Pdt, dCycBTdt, dC20dt, 
+                                 dENSAPTdt, dGWPdt, dMPFdt, dB55dt, dWee1dt])
+    return dydt
 
 def readParams(fpath):
     """
