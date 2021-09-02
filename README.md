@@ -34,22 +34,22 @@ The script generates one `.npz` file for each dilution analized. Each `.npz` fil
 Raster plot simulations require peak times to be saved. Thus, a script called `simulate_raster_single_dil.py` was written. This script takes droplet simulation results for a single dilution (obtained with `simulate_droplets.py`) and obtains the peaktimes for droplets that oscillated. 
 
 ## Bifurcation data from Figure 3I
-The data resulting from the analysis using XPPAUT as well as the ODE file used are stored in the folder `bifurcation/`. The file `result_cdk1_bif_diag.dat` contains the results for the ODE variable $CDK$.
+The data resulting from the analysis using XPPAUT as well as the ODE file used are stored in the folder `bifurcation/`. The file `result_cdk1_bif_diag.dat` contains the results for the ODE variable CDK.
 
 ## Simulations for Figure 3J
 These droplet simulations only differ in the initial condition used for the droplets. The concentration of original extract uses the same initial condition as dilution simulations:
 
-$CB = 0.1\times d, \ \ \ C20 = 1.0\times d, \ \ \ B55=0.7\times d, \ \ \ W=1.0\times d, \ \ \ \text{remaining variables 0.0}$
+![equation](https://latex.codecogs.com/png.latex?%5Cfn_cm%20%5Cbegin%7Balign*%7D%20%26CB%20%3D%200.1%5Ctimes%20d%2C%20%5C%20%5C%20%5C%20C20%20%3D%201.0%5Ctimes%20d%2C%20%5C%5C%20%26B55%3D0.7%5Ctimes%20d%2C%20%5C%20%5C%20%5C%20W%3D1.0%5Ctimes%20d%2C%20%5C%5C%20%26%5Ctext%7Bremaining%20variables%200.0%7D%20%5Cend%7Balign*%7D)
 
-where $d$ represents the cytoplasmic density.
+where d represents the cytoplasmic density.
 
-On the other hand, the dilution of concentrated extract uses the long term steady-state solution of the system when it is concentrated 2.0x:
-
-$Fill here the other inital condition$ 
+On the other hand, the dilution of concentrated extract uses the long term steady-state solution of the system when it is concentrated 2.0x. The values are stored in the file `conc_steady_state.txt` in the folder `concentration/`.
 
 In both cases, the script `simulate_droplets.py` was used. However, in each case the line specifying the initial condition was modified.
 
 ## Supplemental sensitivity simulation
 For each parameter in the ODE model we performed a sensitivity analysis on the period vs. dilution curve. The bulk simulations for each parameter and the scripts used are in the folder `sensitivity`.
+
+
 
 The simulations contained in this project were performed using Python 3.7.0
