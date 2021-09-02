@@ -1,9 +1,10 @@
 # Modeling the effect of cytoplasmic density on the cell cycle
-## In vitro cell cycle oscillations exhibit a robust and hysteretic response to changes in cytoplasmic density
-### Minjun Jin, Franco Tavella, Shiyuan Wang, Qiong Yang
+Article: In vitro cell cycle oscillations exhibit a robust and hysteretic response to changes in cytoplasmic density
 
-Bulk simulations in Figure 3B, 3D, 3E, and 3H use the script `simulate_bulk.py`
-The script `simulate_bulk.py` takes as input two files: one that specifies the ODE parameters, and another one that specifies the simulation parameters. Also, you need to provide a filepath for saving the simulation results (be sure to include a final /), and a desired name for the output.
+Minjun Jin, Franco Tavella, Shiyuan Wang, Qiong Yang
+
+##Bulk simulations in Figure 3B, 3D, 3E, and 3H 
+These simulations use the script `simulate_bulk.py`. This script takes two files as input: one that specifies the ODE parameters, and another one that specifies the simulation parameters. Also, you need to provide a filepath for saving the simulation results (be sure to include a final /), and a desired name for the output.
 
 Example files are provided and you can run the script with the code in this repository by typing:
 
